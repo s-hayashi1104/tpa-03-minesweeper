@@ -1,20 +1,9 @@
 <template>
   <div id="app">
-    <button>Start Game</button>
+    <button @click="startGame">Start Game</button>
     <table class="minesweeper">
-      <tr>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-      </tr>
-      <tr>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
+      <tr v-for="(row, rowIndex) in tiles" :row="row">
+        <td v-for="(col, colIndex) in row" class="unopened" :col="col"></td>
       </tr>
     </table>
   </div>
@@ -24,10 +13,14 @@
 export default {
   name: 'App',
   data: () => {
-    return {};
+    return {
+      tiles:[10][19],
+    };
   },
   methods: {
-
+    startGame:function(){
+      console.log('start!');
+    }
   }
 };
 </script>
