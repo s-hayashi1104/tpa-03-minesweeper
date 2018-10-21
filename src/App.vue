@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <button @click="startGame">Start Game</button>
-    <table class="minesweeper">
-      <tr v-for="(row, rowIndex) in tiles" :row="row">
-        <td v-for="(col, colIndex) in row" class="unopened" :col="col"></td>
+    <table class="minesweeper" >
+      <tr v-for="(row, rowIndex) in tiles" :key="rowIndex">
+        <td v-for="(col, colIndex) in row" :key="colIndex" :class="unopened"></td>
       </tr>
     </table>
   </div>
