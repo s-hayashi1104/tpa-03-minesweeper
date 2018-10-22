@@ -14,7 +14,7 @@ export default {
   name: 'App',
   data: () => {
     return {
-      tiles:[10][19],
+      tiles:[[][]],
     };
   },
   methods: {
