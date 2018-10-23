@@ -21,16 +21,16 @@ export default {
   methods: {
     startGame:function(){
       this.tiles = [];
-      for(let row=0; row < 19; row+=1) {
+      for(let row=0; row < 10; row+=1) {
         this.tiles.push([]);
-        for(let col=0; col < 10; col+=1) {
+        for(let col=0; col < 19; col+=1) {
           this.tiles[row][col] = {class: this.classes[this.random()]};
         }
       }
       console.log('start!');
     },
     random:()=>{
-      return Math.floor(Math.random() * (1 - 0) + 0);
+      return Math.floor(Math.random() * (1));
     },
   }
 };
