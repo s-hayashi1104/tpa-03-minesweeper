@@ -15,7 +15,6 @@ export default {
   data: () => {
     return {
       tiles:[],
-      classes:['unopened','mine', 'opened', 'flagged' ],
     };
   },
   methods: {
@@ -24,13 +23,15 @@ export default {
       for(let row=0; row < 10; row+=1) {
         this.tiles.push([]);
         for(let col=0; col < 19; col+=1) {
-          this.tiles[row][col] = {class: this.classes[this.random()]};
+          this.tiles[row][col] = {
+            row: row,
+            column: col,
+            class: 'unopened',
+            mine: Math.random >= 0.5,
+          };
         }
       }
       console.log('start!');
-    },
-    random:()=>{
-      return Math.floor(Math.random() * (1));
     },
   }
 };
