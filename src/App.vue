@@ -3,7 +3,7 @@
     <button @click="startGame">Start Game</button>
     <table class="minesweeper" >
       <tr v-for="(row, rowIndex) in tiles" :key="rowIndex">
-        <td v-for="(col, colIndex) in row" :key="colIndex" :class="col.class"></td>
+        <td v-for="(col, colIndex) in row" :key="colIndex" :class="col.class" @click="openTile" @click.right.prevent="flagTile"></td>
       </tr>
     </table>
   </div>
@@ -27,12 +27,16 @@ export default {
             row: row,
             column: col,
             class: 'unopened',
-            mine: Math.random >= 0.5,
+            mine: Math.random() >= 0.5,
           };
         }
       }
-      console.log('start!');
     },
+    openTile: function() {
+    },
+    // setFlag: function(tiles) {
+    //   tile.class = 'flagged';
+    // },
   }
 };
 </script>
