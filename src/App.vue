@@ -3,7 +3,7 @@
     <button @click="startGame">Start Game</button>
     <table class="minesweeper" >
       <tr v-for="(row, rowIndex) in tiles" :key="rowIndex">
-        <td v-for="(col, colIndex) in row" :key="colIndex" :class="unopened"></td>
+        <td v-for="(col, colIndex) in row" :key="colIndex" :class="col.class"></td>
       </tr>
     </table>
   </div>
@@ -14,13 +14,24 @@ export default {
   name: 'App',
   data: () => {
     return {
-      tiles:[[][]],
+      tiles:[],
+      classes:['unopened','mine', 'opened', 'flagged' ],
     };
   },
   methods: {
     startGame:function(){
+      this.tiles = [];
+      for(let row=0; row < 19; row+=1) {
+        this.tiles.push([]);
+        for(let col=0; col < 10; col+=1) {
+          this.tiles[row][col] = {class: this.classes[this.random()]};
+        }
+      }
       console.log('start!');
-    }
+    },
+    random:()=>{
+      return Math.floor(Math.random() * (1 - 0) + 0);
+    },
   }
 };
 </script>
