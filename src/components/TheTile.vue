@@ -1,8 +1,8 @@
 <template>
     <td
     :class="state"
-    @click.prevent="openThis"
-    @click.right.prevent="setThis"
+    @leftClick="openThis(state)"
+    @rightClick="setThis(state)"
     >
     </td>
 </template>
@@ -11,12 +11,12 @@
 export default {
   name: 'TheTile',
   props: ['state'],
-  method:{
-    openThis:() => {
-      this.$emit('openTile', this.state);
+  methods:{
+    openThis:(state)=> {
+      this.$emit('openTile', state);
     },
-    setThis:()=>{
-      this.$emit('setFlag', this.state);
+    setThis:(state)=>{
+      this.$emit('setFlag', state);
     },
   }
 };
