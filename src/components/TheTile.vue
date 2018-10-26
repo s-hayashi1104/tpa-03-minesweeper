@@ -1,8 +1,8 @@
 <template>
     <td
     :class="state"
-    @leftClick="openThis(state)"
-    @rightClick="setThis(state)"
+    @click="openThis(state)"
+    v-on:contextmenu.prevent="setThis(state)"
     >
     </td>
 </template>
@@ -12,11 +12,11 @@ export default {
   name: 'TheTile',
   props: ['state'],
   methods:{
-    openThis:(state)=> {
-      this.$emit('openTile', state);
+    openThis:function(state) {
+      this.$emit('leftClick', state);
     },
-    setThis:(state)=>{
-      this.$emit('setFlag', state);
+    setThis:function(state){
+      this.$emit('rightClick', state);
     },
   }
 };
