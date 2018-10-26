@@ -3,7 +3,7 @@
     <button @click="startGame">Start Game</button>
     <table class="minesweeper" >
       <tr v-for="(row, rowIndex) in tiles" :key="rowIndex">
-        <TheTile v-for="(col, colIndex) in row" :key="colIndex" :state="col.class" @click.prevent="openTile" @click.right.prevent="setFlag"></TheTile>
+        <TheTile v-for="(col, colIndex) in row" :key="colIndex" :state="col.class" :leftClick="openTile" :rightClick="setFlag"></TheTile>
       </tr>
     </table>
   </div>
