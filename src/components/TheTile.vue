@@ -2,7 +2,7 @@
     <td
     :class="state"
     @click="openThis(state)"
-    v-on:contextmenu.prevent="setThis(state)"
+    @click.right.prevent="setThis(state)"
     >
     </td>
 </template>
