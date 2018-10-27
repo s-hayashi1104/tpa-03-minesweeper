@@ -1,33 +1,60 @@
 <template>
   <div id="app">
-    <button>Start Game</button>
-    <table class="minesweeper">
-      <tr>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-      </tr>
-      <tr>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
-        <td class="unopened"></td>
+    <button @click="startGame">Start Game</button>
+    <table class="minesweeper" >
+      <tr v-for="(row, rowIndex) in tiles" :key="rowIndex">
+        <TheTile v-for="(col, colIndex) in row" :key="colIndex" :state="col.class" :leftClick="openTile" :rightClick="setFlag"></TheTile>
       </tr>
     </table>
   </div>
 </template>
 
 <script>
+import TheTile from './components/TheTile.vue';
+
 export default {
   name: 'App',
+  components: {
+    TheTile,
+  },
   data: () => {
-    return {};
+    return {
+      tiles:[],
+    };
   },
   methods: {
+    startGame:function(){
+      this.tiles = [];
+      for(let row=0; row < 10; row+=1) {
+        this.tiles.push([]);
+        for(let col=0; col < 19; col+=1) {
+          this.tiles[row][col] = {
+            row: row,
+            column: col,
+            class: 'unopened',
+            mine: Math.random() >= 0.5,
+          };
+        }
+      }
+    },
+    /**
+     * opens a tile
+     * @function
+     * @param {Object} tile
+     * @return {undefined}
+     */
+    openTile: function() {
+    },
 
+    /**
+     * setFlag
+     * @function
+     * @param {Object} tile
+     * @return {undefined}
+     */
+    setFlag: function(tile) {
+      tile.class = 'flagged';
+    },
   }
 };
 </script>
@@ -55,55 +82,5 @@ table.minesweeper td {
   width: 24px;
   height: 24px;
   background-size: cover;
-}
-
-td.unopened {
-  background: url('./assets/unopened.svg');
-  cursor: pointer;
-}
-
-td.opened {
-  background: url('./assets/opened.svg');
-}
-
-td.flagged {
-  background: url('./assets/flag.svg');
-  cursor: pointer;
-}
-
-td.mine {
-  background: url('./assets/mine.png');
-}
-
-td.mine-neighbor-1 {
-  background: url('./assets/1.svg');
-}
-
-td.mine-neighbor-2 {
-  background: url('./assets/2.svg');
-}
-
-td.mine-neighbor-3 {
-  background: url('./assets/3.svg');
-}
-
-td.mine-neighbor-4 {
-  background: url('./assets/4.svg');
-}
-
-td.mine-neighbor-5 {
-  background: url('./assets/5.svg');
-}
-
-td.mine-neighbor-6 {
-  background: url('./assets/6.svg');
-}
-
-td.mine-neighbor-7 {
-  background: url('./assets/7.svg');
-}
-
-td.mine-neighbor-8 {
-  background: url('./assets/8.svg');
 }
 </style>
