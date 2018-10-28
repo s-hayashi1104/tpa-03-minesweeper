@@ -3,7 +3,7 @@
     <button @click="startGame">Start Game</button>
     <table class="minesweeper" >
       <tr v-for="(row, rowIndex) in tiles" :key="rowIndex">
-        <TheTile v-for="(col, colIndex) in row" :key="colIndex" :state="col.class" :leftClick="openTile" :rightClick="setFlag"></TheTile>
+        <TheTile v-for="(tile, colIndex) in row" :key="colIndex" :state="tile" :leftClick="openTile" :rightClick="setFlag"></TheTile>
       </tr>
     </table>
   </div>
@@ -20,10 +20,14 @@ export default {
   data: () => {
     return {
       tiles:[],
+      isStart: false,
+      isSuccess: false,
+      isFailure: false,
     };
   },
   methods: {
     startGame:function(){
+      this.init();
       this.tiles = [];
       for(let row=0; row < 10; row+=1) {
         this.tiles.push([]);
@@ -36,6 +40,15 @@ export default {
           };
         }
       }
+    },
+    reset: function() {
+      this.init();
+    },
+    init: function() {
+      this.tiles = [];
+      this.isStart = false;
+      this.isSuccess = false;
+      this.isFailure = false;
     },
     /**
      * opens a tile

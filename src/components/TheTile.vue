@@ -1,6 +1,6 @@
 <template>
     <td
-    :class="state"
+    :class="state.class"
     @click="openThis(state)"
     @click.right.prevent="setThis(state)"
     >
