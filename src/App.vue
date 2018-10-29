@@ -3,7 +3,7 @@
     <button @click="startGame">Start Game</button>
     <table class="minesweeper" >
       <tr v-for="(row, rowIndex) in tiles" :key="rowIndex">
-        <TheTile v-for="(tile, colIndex) in row" :key="colIndex" :state="tile" :leftClick="openTile" :rightClick="setFlag"></TheTile>
+        <TheTile v-for="(tile, colIndex) in row" :key="colIndex" :state="tile" @leftClick="openTile" @rightClick="setFlag"></TheTile>
       </tr>
     </table>
   </div>
@@ -56,9 +56,26 @@ export default {
      * @param {Object} tile
      * @return {undefined}
      */
-    openTile: function() {
+    openTile: function(tile) {
+      if (tile.mined) {
+        this.isFailure = true;
+        this.allOpenTiles();
+      }else{
+        tile.class = 'opened';
+      }
     },
-
+    /**
+     * opens all tiles
+     * @function
+     * @return {undefined}
+     */
+    allOpenTiles:function(){
+      this.tiles.forEach((row) => {
+        row.forEach((tile)=> {
+          this.openTile(tile);
+        });
+      });
+    },
     /**
      * setFlag
      * @function
