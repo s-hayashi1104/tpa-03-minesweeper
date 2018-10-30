@@ -66,14 +66,61 @@ export default {
         this.allOpenTiles();
       }else{
         tile.class = 'opened';
-        for (let j = (tile.column > 0 ? -1 : 0); j <= ( tile.column < 10 - 1 ? 1 : 0); j++) {
-          for (let i = (tile.row > 0 ? -1 : 0); i <= (tile.row < 19 - 1 ? 1 : 0); i++) {
-            if (j === 0 && i === 0) {
-              continue;
-            } else if (tile.mined) {
-              break;
-            }//ここからどうやってtileにアクセスするのか？？
+        const row = tile.row;
+        const col = tile.column;
+        let arr = [this.tiles[row-1][col-1], this.tiles[row-1][col], this.tiles[row-1][col+1],
+          this.tiles[row][col-1], this.tiles[row][col+1],
+          this.tiles[row+1][col-1], this.tiles[row+1][col], this.tiles[row+1][col+1]];
+        if (row === 0) {
+          if (col === 0) {
+            arr = [this.tiles[row][col+1],
+              this.tiles[row+1][col], this.tiles[row+1][col+1]];
           }
+          else if (col === 18) {
+            arr = [this.tiles[row][col-1],
+              this.tiles[row+1][col-1], this.tiles[row+1][col]];         
+          }
+          else{
+            arr = [this.tiles[row][col-1], this.tiles[row][col+1],
+              this.tiles[row+1][col-1], this.tiles[row+1][col], this.tiles[row+1][col+1]];
+          }
+        }
+        else if (row === 9) {
+          if (col === 0) {
+            arr = [this.tiles[row-1][col], this.tiles[row-1][col+1],
+              this.tiles[row][col+1]];
+          }
+          else if (col === 18) {
+            arr = [this.tiles[row-1][col-1], this.tiles[row-1][col],
+              this.tiles[row][col-1]];
+          }
+          else{
+            arr = [this.tiles[row-1][col-1], this.tiles[row-1][col],
+              this.tiles[row][col-1]];
+          }
+        }
+        else if (col === 0){
+          arr = [this.tiles[row-1][col], this.tiles[row-1][col+1],
+            this.tiles[row][col+1],
+            this.tiles[row+1][col], this.tiles[row+1][col+1]];
+        }
+        else if (col === 18) {
+          arr = [this.tiles[row-1][col-1], this.tiles[row-1][col],
+            this.tiles[row][col-1],
+            this.tiles[row+1][col-1], this.tiles[row+1][col]];
+        }
+        let flag = true;
+        for (let i =0; i < arr.length; i+=1){
+          let element = arr[i];
+          if(element.mined){
+            flag = false;
+            break;
+          }
+        }
+        if (flag){
+          arr.forEach((tile) =>{
+            tile.class = 'opened';
+          });
         }
       }
     },
