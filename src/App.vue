@@ -57,11 +57,24 @@ export default {
      * @return {undefined}
      */
     openTile: function(tile) {
+      if(tile.class === 'opened'  || tile.class === 'flagged') {
+        return;
+      }
       if (tile.mined) {
+        tile.class = 'mined';
         this.isFailure = true;
         this.allOpenTiles();
       }else{
         tile.class = 'opened';
+        for (let j = (tile.column > 0 ? -1 : 0); j <= ( tile.column < 10 - 1 ? 1 : 0); j++) {
+          for (let i = (tile.row > 0 ? -1 : 0); i <= (tile.row < 19 - 1 ? 1 : 0); i++) {
+            if (j === 0 && i === 0) {
+              continue;
+            } else if (tile.mined) {
+              break;
+            }//ここからどうやってtileにアクセスするのか？？
+          }
+        }
       }
     },
     /**
@@ -73,6 +86,7 @@ export default {
       this.tiles.forEach((row) => {
         row.forEach((tile)=> {
           this.openTile(tile);
+          return;
         });
       });
     },
@@ -83,7 +97,12 @@ export default {
      * @return {undefined}
      */
     setFlag: function(tile) {
-      tile.class = 'flagged';
+      if (tile.class === 'flagged') {
+        tile.class = 'unopened';
+      }
+      if (tile.class === 'unopened') {
+        tile.class = 'flagged';
+      }
     },
   }
 };
