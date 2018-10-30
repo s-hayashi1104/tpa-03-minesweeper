@@ -66,11 +66,9 @@ export default {
         this.allOpenTiles();
       }else{
         tile.class = 'opened';
-        const row = tile.row;
-        const col = tile.column;
-        let arr = [this.tiles[row-1][col-1], this.tiles[row-1][col], this.tiles[row-1][col+1],
-          this.tiles[row][col-1], this.tiles[row][col+1],
-          this.tiles[row+1][col-1], this.tiles[row+1][col], this.tiles[row+1][col+1]];
+        const row = parseInt(tile.row, 10);
+        const col = parseInt(tile.column, 10);
+        let arr = [];
         if (row === 0) {
           if (col === 0) {
             arr = [this.tiles[row][col+1],
@@ -109,6 +107,12 @@ export default {
             this.tiles[row][col-1],
             this.tiles[row+1][col-1], this.tiles[row+1][col]];
         }
+        else {
+          arr = [this.tiles[row-1][col-1], this.tiles[row-1][col], this.tiles[row-1][col+1],
+            this.tiles[row][col-1], this.tiles[row][col+1],
+            this.tiles[row+1][col-1], this.tiles[row+1][col], this.tiles[row+1][col+1]];
+        }
+
         let flag = true;
         for (let i =0; i < arr.length; i+=1){
           let element = arr[i];
