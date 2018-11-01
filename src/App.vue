@@ -65,68 +65,31 @@ export default {
         this.isFailure = true;
         this.allOpenTiles();
       }else{
-        tile.class = 'opened';
-        const row = parseInt(tile.row, 10);
-        const col = parseInt(tile.column, 10);
-        let arr = [];
-        if (row === 0) {
-          if (col === 0) {
-            arr = [this.tiles[row][col+1],
-              this.tiles[row+1][col], this.tiles[row+1][col+1]];
-          }
-          else if (col === 18) {
-            arr = [this.tiles[row][col-1],
-              this.tiles[row+1][col-1], this.tiles[row+1][col]];         
-          }
-          else{
-            arr = [this.tiles[row][col-1], this.tiles[row][col+1],
-              this.tiles[row+1][col-1], this.tiles[row+1][col], this.tiles[row+1][col+1]];
-          }
-        }
-        else if (row === 9) {
-          if (col === 0) {
-            arr = [this.tiles[row-1][col], this.tiles[row-1][col+1],
-              this.tiles[row][col+1]];
-          }
-          else if (col === 18) {
-            arr = [this.tiles[row-1][col-1], this.tiles[row-1][col],
-              this.tiles[row][col-1]];
-          }
-          else{
-            arr = [this.tiles[row-1][col-1], this.tiles[row-1][col],
-              this.tiles[row][col-1]];
-          }
-        }
-        else if (col === 0){
-          arr = [this.tiles[row-1][col], this.tiles[row-1][col+1],
-            this.tiles[row][col+1],
-            this.tiles[row+1][col], this.tiles[row+1][col+1]];
-        }
-        else if (col === 18) {
-          arr = [this.tiles[row-1][col-1], this.tiles[row-1][col],
-            this.tiles[row][col-1],
-            this.tiles[row+1][col-1], this.tiles[row+1][col]];
-        }
-        else {
-          arr = [this.tiles[row-1][col-1], this.tiles[row-1][col], this.tiles[row-1][col+1],
-            this.tiles[row][col-1], this.tiles[row][col+1],
-            this.tiles[row+1][col-1], this.tiles[row+1][col], this.tiles[row+1][col+1]];
-        }
-
-        let flag = true;
-        for (let i =0; i < arr.length; i+=1){
-          let element = arr[i];
-          if(element.mined){
-            flag = false;
-            break;
-          }
-        }
-        if (flag){
-          arr.forEach((tile) =>{
-            tile.class = 'opened';
-          });
+        let neighbourMines = this.countNeighbourMines(tile);
+        if (neighbourMines === 0) {
+          tile.class = 'opened';
         }
       }
+    },
+    countNeighbourMines: function(tile) {
+      return this.neighbours(tile).filter((neighbour) => {
+        return neighbour.mined;
+      }).length;
+    },
+    neighbours: function(tile) {
+      const theNeighbours = [];
+      [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1],
+        [1, -1], [1, 0], [1, 1]].forEach((offset) => {
+        let x = tile.row + offset[0];
+        let y = tile.col + offset[1];
+        if (this.valid(x, y)) {
+          theNeighbours.push(this.tiles[x][y]);
+        }
+      });
+      return theNeighbours;
+    },
+    valid: function(row, column) {
+      return (row >= 0 && row < this.tiles.length) && (column >= 0 && column < this.tiles[0].length);
     },
     /**
      * opens all tiles
