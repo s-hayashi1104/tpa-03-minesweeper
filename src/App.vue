@@ -81,7 +81,7 @@ export default {
       [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1],
         [1, -1], [1, 0], [1, 1]].forEach((offset) => {
         let x = tile.row + offset[0];
-        let y = tile.col + offset[1];
+        let y = tile.column + offset[1];
         if (this.valid(x, y)) {
           theNeighbours.push(this.tiles[x][y]);
         }
