@@ -34,12 +34,12 @@ export default {
       for(let row=0; row < 10; row+=1) {
         this.tiles.push([]);
         for(let col=0; col < 19; col+=1) {
-          this.tiles[row][col] = {
+          this.tiles[row].push({
             row: row,
             column: col,
             class: 'unopened',
             mine: Math.random() >= 0.5,
-          };
+          });
         }
       }
     },
@@ -59,8 +59,6 @@ export default {
      * @return {undefined}
      */
     openTile: function(tile) {
-      let x = tile.row;
-      let y = tile.column;
       if(tile.class === 'opened'  || tile.class === 'flagged') {
         return;
       }
@@ -70,8 +68,9 @@ export default {
         this.allOpenTiles();
       }else{
         let neighbourMines = this.countNeighbourMines(tile);
+        console.log(neighbourMines);
         if (neighbourMines === 0) {
-          this.tiles[x][y].class = 'opened';
+          tile.class = 'opened';
         }
         else{
           tile.class = `mine-neighbor-${neighbourMines}`;
@@ -79,19 +78,23 @@ export default {
       }
     },
     countNeighbourMines: function(tile) {
+      console.log(this.neighbours(tile));
       return this.neighbours(tile).filter((neighbour) => {
+        console.log(neighbour);
         return neighbour.mine;
       }).length;
     },
     neighbours: function(tile) {
-      return [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1],
-        [1, -1], [1, 0], [1, 1]].filter((offset) => {
+      const theNeighbours = [];
+      [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1],
+        [1, -1], [1, 0], [1, 1]].forEach((offset) => {
         let x = tile.row + offset[0];
         let y = tile.column + offset[1];
         if (this.valid(x, y)) {
-          return this.tiles[x][y];
+          theNeighbours.push(this.tiles[x][y]);
         }
       });
+      return theNeighbours;
     },
     valid: function(row, column) {
       return (row >= 0 && row < this.tiles.length) && (column >= 0 && column < this.tiles[0].length);
@@ -104,7 +107,12 @@ export default {
     allOpenTiles:function(){
       this.tiles.forEach((row) => {
         row.forEach((tile)=> {
-          this.openTile(tile);
+          if(tile.mine){
+            tile.class = 'mine';
+          }
+          else{
+            tile.class = 'opened'; 
+          }
           return;
         });
       });
@@ -116,14 +124,11 @@ export default {
      * @return {undefined}
      */
     setFlag: function(tile) {
-      console.log(tile);
-      let x = parseInt(tile.row, 10);
-      let y = parseInt(tile.column, 10);
       if (tile.class === 'flagged') {
-        this.tile[x][y].class = 'unopened';
+        tile.class = 'unopened';
       }
-      if (tile.class === 'unopened') {
-        this.$set(tile, 'class', 'flagged');
+      else {
+        tile.class = 'flagged';
       }
     },
   }
