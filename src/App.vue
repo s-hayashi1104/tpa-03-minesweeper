@@ -116,13 +116,14 @@ export default {
      * @return {undefined}
      */
     setFlag: function(tile) {
+      console.log(tile);
       let x = parseInt(tile.row, 10);
       let y = parseInt(tile.column, 10);
       if (tile.class === 'flagged') {
         this.tile[x][y].class = 'unopened';
       }
       if (tile.class === 'unopened') {
-        this.tiles[x].push('flagged');
+        this.$set(tile, 'class', 'flagged');
       }
     },
   }
