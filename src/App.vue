@@ -3,7 +3,7 @@
     <button @click="startGame">Start Game</button>
     <table class="minesweeper" >
       <tr v-for="(row, rowIndex) in tiles" :key="rowIndex">
-        <TheTile v-for="(tile, colIndex) in row" :key="colIndex" :state="tile" @leftClick="openTile" @rightClick="setFlag"></TheTile>
+        <TheTile v-for="(tile, colIndex) in row" :key="colIndex" :state="tile" :className="tile.class" @leftClick="openTile" @rightClick="setFlag"></TheTile>
       </tr>
     </table>
   </div>
@@ -23,6 +23,8 @@ export default {
       isStart: false,
       isSuccess: false,
       isFailure: false,
+      neighbour: ['mine-neighbor-1', 'mine-neighbor-2', 'mine-neighbor-3', 'mine-neighbor-4', 'mine-neighbor-5', 'mine-neighbor-6',
+        'mine-neighbor-7', 'mine-neighbor-8', 'mine-neighbor-9'],
     };
   },
   methods: {
@@ -57,36 +59,39 @@ export default {
      * @return {undefined}
      */
     openTile: function(tile) {
+      let x = tile.row;
+      let y = tile.column;
       if(tile.class === 'opened'  || tile.class === 'flagged') {
         return;
       }
-      if (tile.mined) {
-        tile.class = 'mined';
+      if (tile.mine) {
+        tile.class = 'mine';
         this.isFailure = true;
         this.allOpenTiles();
       }else{
         let neighbourMines = this.countNeighbourMines(tile);
         if (neighbourMines === 0) {
-          tile.class = 'opened';
+          this.tiles[x][y].class = 'opened';
+        }
+        else{
+          tile.class = `mine-neighbor-${neighbourMines}`;
         }
       }
     },
     countNeighbourMines: function(tile) {
       return this.neighbours(tile).filter((neighbour) => {
-        return neighbour.mined;
+        return neighbour.mine;
       }).length;
     },
     neighbours: function(tile) {
-      const theNeighbours = [];
-      [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1],
-        [1, -1], [1, 0], [1, 1]].forEach((offset) => {
+      return [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1],
+        [1, -1], [1, 0], [1, 1]].filter((offset) => {
         let x = tile.row + offset[0];
         let y = tile.column + offset[1];
         if (this.valid(x, y)) {
-          theNeighbours.push(this.tiles[x][y]);
+          return this.tiles[x][y];
         }
       });
-      return theNeighbours;
     },
     valid: function(row, column) {
       return (row >= 0 && row < this.tiles.length) && (column >= 0 && column < this.tiles[0].length);
@@ -111,11 +116,13 @@ export default {
      * @return {undefined}
      */
     setFlag: function(tile) {
+      let x = parseInt(tile.row, 10);
+      let y = parseInt(tile.column, 10);
       if (tile.class === 'flagged') {
-        tile.class = 'unopened';
+        this.tile[x][y].class = 'unopened';
       }
       if (tile.class === 'unopened') {
-        tile.class = 'flagged';
+        this.tiles[x].push('flagged');
       }
     },
   }

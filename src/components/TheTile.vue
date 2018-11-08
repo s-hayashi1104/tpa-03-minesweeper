@@ -1,6 +1,6 @@
 <template>
     <td
-    :class="state.class"
+    :class="className"
     @click="openThis(state)"
     @click.right.prevent="setThis(state)"
     >
@@ -10,7 +10,7 @@
 <script>
 export default {
   name: 'TheTile',
-  props: ['state'],
+  props: ['state', 'className'],
   methods:{
     openThis:function(state) {
       this.$emit('leftClick', state);
