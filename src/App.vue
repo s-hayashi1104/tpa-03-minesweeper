@@ -38,7 +38,7 @@ export default {
             row: row,
             column: col,
             class: 'unopened',
-            mine: Math.random() >= 0.5,
+            mine: Math.random() >= 0.7,
           });
         }
       }
@@ -68,9 +68,11 @@ export default {
         this.allOpenTiles();
       }else{
         let neighbourMines = this.countNeighbourMines(tile);
-        console.log(neighbourMines);
         if (neighbourMines === 0) {
           tile.class = 'opened';
+          this.neighbours(tile).forEach((around) => {
+            this.openTile(around);
+          });
         }
         else{
           tile.class = `mine-neighbor-${neighbourMines}`;
@@ -78,9 +80,7 @@ export default {
       }
     },
     countNeighbourMines: function(tile) {
-      console.log(this.neighbours(tile));
       return this.neighbours(tile).filter((neighbour) => {
-        console.log(neighbour);
         return neighbour.mine;
       }).length;
     },
@@ -111,7 +111,9 @@ export default {
             tile.class = 'mine';
           }
           else{
-            tile.class = 'opened'; 
+            if(tile.class === 'unopened'){
+              tile.class = 'opened'; 
+            }  
           }
           return;
         });
