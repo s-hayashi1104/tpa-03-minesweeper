@@ -111,9 +111,15 @@ export default {
             tile.class = 'mine';
           }
           else{
-            if(tile.class === 'unopened'){
-              tile.class = 'opened'; 
-            }  
+            let neighbourMines = this.countNeighbourMines(tile);
+            if (neighbourMines !== 0) {
+              tile.class = `mine-neighbor-${neighbourMines}`;
+            }
+            else{
+              if(tile.class === 'unopened'){
+                tile.class = 'opened';
+              }   
+            }
           }
           return;
         });
