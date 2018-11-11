@@ -59,6 +59,9 @@ export default {
      * @return {undefined}
      */
     openTile: function(tile) {
+      if (this.isFailure) {
+        return;
+      }
       if(tile.class === 'opened'  || tile.class === 'flagged') {
         return;
       }
@@ -132,6 +135,9 @@ export default {
      * @return {undefined}
      */
     setFlag: function(tile) {
+      if (this.isFailure) {
+        return;
+      }
       if (tile.class === 'flagged') {
         tile.class = 'unopened';
       }
