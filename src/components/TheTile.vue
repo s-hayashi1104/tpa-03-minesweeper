@@ -10,12 +10,7 @@
 <script>
 export default {
   name: 'TheTile',
-  props: {
-    state:{
-      type:object,
-      required: true
-    }
-  },
+  props: ['state'],
   methods:{
     openThis:function(state) {
       this.$emit('leftClick', state);
