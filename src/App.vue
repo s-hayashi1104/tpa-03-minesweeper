@@ -49,9 +49,6 @@ export default {
         }
       }
     },
-    reset: function() {
-      this.init();
-    },
     init: function() {
       this.tiles = [];
       this.isStart = false;
@@ -144,7 +141,7 @@ export default {
      * @return {undefined}
      */
     setFlag: function(tile) {
-      if (this.isFailure) {
+      if (this.isFailure || tile.class === 'opened') {
         return;
       }
       if (tile.class === 'flagged') {
