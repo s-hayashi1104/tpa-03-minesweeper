@@ -65,28 +65,31 @@ export default {
      * @return {undefined}
      */
     openTile: function(tile) {
-      if (this.isFailure) {
-        return;
-      }
-      if(tile.class === 'opened'  || tile.class === 'flagged') {
+      if(this.isFailure || tile.class === 'opened'  || tile.class === 'flagged') {
         return;
       }
       if (tile.mine) {
-        tile.class = 'mine';
-        this.isFailure = true;
-        this.allOpenTiles();
+        this.gameOver(tile);
       }else{
-        let neighbourMines = this.countNeighbourMines(tile);
-        if (neighbourMines === 0) {
-          tile.class = 'opened';
-          this.neighbours(tile).forEach((around) => {
-            this.openTile(around);
-          });
-        }
-        else{
-          tile.class = `mine-neighbor-${neighbourMines}`;
-        }
+        this.open(tile);
       }
+    },
+    open: function(tile){
+      let neighbourMines = this.countNeighbourMines(tile);
+      if (neighbourMines === 0) {
+        tile.class = 'opened';
+        this.neighbours(tile).forEach((around) => {
+          this.openTile(around);
+        });
+      }
+      else{
+        tile.class = `mine-neighbor-${neighbourMines}`;
+      }
+    },
+    gameOver: function(tile) {
+      tile.class = 'mine';
+      this.isFailure = true;
+      this.allOpenTiles();
     },
     countNeighbourMines: function(tile) {
       return this.neighbours(tile).filter((neighbour) => {
