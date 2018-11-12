@@ -34,12 +34,12 @@ export default {
     };
   },
   methods: {
-    startGame:function(){
+    startGame: function() {
       this.init();
       this.tiles = [];
-      for(let row=0; row < 10; row+=1) {
+      for (let row=0; row < 10; row+=1) {
         this.tiles.push([]);
-        for(let column=0; column < 19; column+=1) {
+        for (let column=0; column < 19; column+=1) {
           this.tiles[row].push({
             row,
             column,
@@ -51,8 +51,6 @@ export default {
     },
     init: function() {
       this.tiles = [];
-      this.isStart = false;
-      this.isSuccess = false;
       this.isFailure = false;
     },
     /**
@@ -62,24 +60,23 @@ export default {
      * @return {undefined}
      */
     openTile: function(tile) {
-      if(this.isFailure || tile.class === 'opened'  || tile.class === 'flagged') {
+      if (this.isFailure || tile.class === 'opened'  || tile.class === 'flagged') {
         return;
       }
       if (tile.mine) {
         this.gameOver(tile);
-      }else{
+      } else {
         this.open(tile);
       }
     },
-    open: function(tile){
+    open: function(tile) {
       let neighbourMines = this.countNeighbourMines(tile);
       if (neighbourMines === 0) {
         tile.class = 'opened';
         this.neighbours(tile).forEach((around) => {
           this.openTile(around);
         });
-      }
-      else{
+      } else {
         tile.class = `mine-neighbor-${neighbourMines}`;
       }
     },
@@ -113,19 +110,17 @@ export default {
      * @function
      * @return {undefined}
      */
-    allOpenTiles:function(){
+    allOpenTiles: function() {
       this.tiles.forEach((row) => {
         row.forEach((tile)=> {
-          if(tile.mine){
+          if (tile.mine) {
             tile.class = 'mine';
-          }
-          else{
+          } else {
             let neighbourMines = this.countNeighbourMines(tile);
             if (neighbourMines !== 0) {
               tile.class = `mine-neighbor-${neighbourMines}`;
-            }
-            else{
-              if(tile.class === 'unopened'){
+            } else {
+              if (tile.class === 'unopened') {
                 tile.class = 'opened';
               }   
             }
@@ -146,8 +141,7 @@ export default {
       }
       if (tile.class === 'flagged') {
         tile.class = 'unopened';
-      }
-      else {
+      } else {
         tile.class = 'flagged';
       }
     },
