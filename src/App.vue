@@ -39,10 +39,10 @@ export default {
       this.tiles = [];
       for(let row=0; row < 10; row+=1) {
         this.tiles.push([]);
-        for(let col=0; col < 19; col+=1) {
+        for(let column=0; column < 19; column+=1) {
           this.tiles[row].push({
-            row: row,
-            column: col,
+            row,
+            column,
             class: 'unopened',
             mine: Math.random() >= 0.7,
           });
