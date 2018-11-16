@@ -3,7 +3,13 @@
     <button @click="startGame">Start Game</button>
     <table class="minesweeper" >
       <tr v-for="(row, rowIndex) in tiles" :key="rowIndex">
-        <TheTile v-for="(col, colIndex) in row" :key="colIndex" :state="col.class" :leftClick="openTile" :rightClick="setFlag"></TheTile>
+        <TheTile
+         v-for="(tile, colIndex) in row"
+          :key="colIndex" :state="tile"
+          :className="tile.class"
+          @leftClick="openTile"
+          @rightClick="setFlag"
+        ></TheTile>
       </tr>
     </table>
   </div>
@@ -20,22 +26,32 @@ export default {
   data: () => {
     return {
       tiles:[],
+      isStart: false,
+      isSuccess: false,
+      isFailure: false,
+      neighbour: ['mine-neighbor-1', 'mine-neighbor-2', 'mine-neighbor-3', 'mine-neighbor-4', 'mine-neighbor-5', 'mine-neighbor-6',
+        'mine-neighbor-7', 'mine-neighbor-8', 'mine-neighbor-9'],
     };
   },
   methods: {
-    startGame:function(){
+    startGame: function() {
+      this.init();
       this.tiles = [];
-      for(let row=0; row < 10; row+=1) {
+      for (let row=0; row < 10; row+=1) {
         this.tiles.push([]);
-        for(let col=0; col < 19; col+=1) {
-          this.tiles[row][col] = {
-            row: row,
-            column: col,
+        for (let column=0; column < 19; column+=1) {
+          this.tiles[row].push({
+            row,
+            column,
             class: 'unopened',
-            mine: Math.random() >= 0.5,
-          };
+            mine: Math.random() >= 0.7,
+          });
         }
       }
+    },
+    init: function() {
+      this.tiles = [];
+      this.isFailure = false;
     },
     /**
      * opens a tile
@@ -43,9 +59,76 @@ export default {
      * @param {Object} tile
      * @return {undefined}
      */
-    openTile: function() {
+    openTile: function(tile) {
+      if (this.isFailure || tile.class === 'opened'  || tile.class === 'flagged') {
+        return;
+      }
+      if (tile.mine) {
+        this.gameOver(tile);
+      } else {
+        this.open(tile);
+      }
     },
-
+    open: function(tile) {
+      let neighbourMines = this.countNeighbourMines(tile);
+      if (neighbourMines === 0) {
+        tile.class = 'opened';
+        this.neighbours(tile).forEach((around) => {
+          this.openTile(around);
+        });
+      } else {
+        tile.class = `mine-neighbor-${neighbourMines}`;
+      }
+    },
+    gameOver: function(tile) {
+      tile.class = 'mine';
+      this.isFailure = true;
+      this.allOpenTiles();
+    },
+    countNeighbourMines: function(tile) {
+      return this.neighbours(tile).filter((neighbour) => {
+        return neighbour.mine;
+      }).length;
+    },
+    neighbours: function(tile) {
+      const theNeighbours = [];
+      [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1],
+        [1, -1], [1, 0], [1, 1]].forEach((offset) => {
+        let x = tile.row + offset[0];
+        let y = tile.column + offset[1];
+        if (this.valid(x, y)) {
+          theNeighbours.push(this.tiles[x][y]);
+        }
+      });
+      return theNeighbours;
+    },
+    valid: function(row, column) {
+      return (row >= 0 && row < this.tiles.length) && (column >= 0 && column < this.tiles[0].length);
+    },
+    /**
+     * opens all tiles
+     * @function
+     * @return {undefined}
+     */
+    allOpenTiles: function() {
+      this.tiles.forEach((row) => {
+        row.forEach((tile)=> {
+          if (tile.mine) {
+            tile.class = 'mine';
+          } else {
+            let neighbourMines = this.countNeighbourMines(tile);
+            if (neighbourMines !== 0) {
+              tile.class = `mine-neighbor-${neighbourMines}`;
+            } else {
+              if (tile.class === 'unopened') {
+                tile.class = 'opened';
+              }   
+            }
+          }
+          return;
+        });
+      });
+    },
     /**
      * setFlag
      * @function
@@ -53,7 +136,14 @@ export default {
      * @return {undefined}
      */
     setFlag: function(tile) {
-      tile.class = 'flagged';
+      if (this.isFailure || tile.class === 'opened') {
+        return;
+      }
+      if (tile.class === 'flagged') {
+        tile.class = 'unopened';
+      } else {
+        tile.class = 'flagged';
+      }
     },
   }
 };
